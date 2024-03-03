@@ -9,6 +9,12 @@ const app = express();
 
 app.use(bodyParser.json()); // using json data in post requests
 
+const requestFilter = (req, res, next) => {
+  console.log('Middleware STop check for all routes');
+  next();
+};
+// app.use(requestFilter);
+
 app.use('/', libraryRouter); // use the users router
 const port = process.env.PORT || 3000;
 
