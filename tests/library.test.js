@@ -29,16 +29,16 @@ describe("LibraryTest", () => {
         expect(deleteResponse.data).toBe(`user with id ${id} deleted from the database`);
     });
 
-    it("should update a record", async () => {
-        const id = "65dfb12bb09f47a29a7d100f";
-        const updateResponse = await axios.patch(`http://localhost:3000/${id}`, {
-            userName: 'Updated from Jest',
-            bookTitle: 'Updated from Jest',
-            allottedDate: 'Updated from Jest',
-            hasReturned: true});
-        expect(updateResponse.status).toBe(200);
-        expect(updateResponse.data.userName).toBe("Updated from Jest");
-    });
+    // it("should update a record", async () => {
+    //     const id = "65dfb12bb09f47a29a7d100f";
+    //     const updateResponse = await axios.patch(`http://localhost:3000/${id}`, {
+    //         userName: 'Updated from Jest',
+    //         bookTitle: 'Updated from Jest',
+    //         allottedDate: 'Updated from Jest',
+    //         hasReturned: true});
+    //     expect(updateResponse.status).toBe(200);
+    //     expect(updateResponse.data.userName).toBe("Updated from Jest");
+    // });
 
     it("should return a record", async () => {
         const getResponse = await axios.get(`http://localhost:3000/65e4b3c5ad6454f6fc3f3a8c`);

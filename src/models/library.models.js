@@ -5,13 +5,17 @@ const librarySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    bookTitle: {
+    password: {
         type: String,
         required: true,
     },
+    bookTitle: {
+        type: String,
+        // required: true,
+    },
     allottedDate: {
         type: Date,
-        required: true,
+        // required: true,
     },
     hasReturned: {
         type: Boolean,
