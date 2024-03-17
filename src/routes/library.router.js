@@ -10,7 +10,7 @@ const libraryRouter = express.Router();
 libraryRouter.get('/', getUsers);
 libraryRouter.use('/auth', authRouter);
 libraryRouter.use('/protected', protectedRoute);
-libraryRouter.post('/', createObjValid, createUser);
+// libraryRouter.post('/', createObjValid, createUser);     //commented because user is created by auth route at /auth/register
 libraryRouter.get('/:id', idObjValid, getUser);
 libraryRouter.delete('/:id', deleteUser);
 libraryRouter.patch('/:id', updateObjValid, updateUser);

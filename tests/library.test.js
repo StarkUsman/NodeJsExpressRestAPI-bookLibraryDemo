@@ -1,48 +1,100 @@
-const axios = require('axios');
+import { describe, it, mock } from 'node:test';
+import assert from 'node:assert/strict';
+import { createUser, getUsers, getUser, deleteUser, updateUser } from '../src/controllers/library.controller.js';
+import LibrarySchema from '../src/models/library.models.js';
 
-const requestBody = {
-    userName: "Jest Testing",
-    bookTitle: "Testing from Jest",
-    allottedDate: "2024-02-29T12:00:00.000Z",
-    hasReturned: false
-};
+// describe('Controller Tests', () => {
+//     it('should get users', async () => {
+//         const users = [{ name: 'User 1' }, { name: 'User 2' }];
+//         mock.method(LibrarySchema, 'find', async () => users);
 
-describe("LibraryTest", () => {
+//         const req = {};
+//         const res = {
+//             send: (data) => {
+//                 assert.deepEqual(data, users);
+//             }
+//         };
 
-    it("should return all records", async () => {
-        const response = await axios.get('http://localhost:3000/');
-        expect(response.status).toBe(200);
+//         await getUsers(req, res);
+//     });
+
+//     // Similarly, implement tests for other controller functions
+// });
+
+describe('Controller Tests', () => {
+    it('should create a new user', async () => {
+        const req = { body: { firstName: 'John', lastName: 'Doe', age: 30 } };
+        const newUser = { id: '1', firstName: 'John', lastName: 'Doe', age: 30 };
+        
+        mock.method(LibrarySchema, 'create', async () => newUser);
+
+        const res = {
+            status: (code) => ({
+                json: (data) => {
+                    assert.equal(code, 201);
+                    assert.deepEqual(data, newUser);
+                }
+            })
+        };
+
+        await createUser(req, res);
     });
 
-    it("should add a new record", async () => {
-        const response = await axios.post('http://localhost:3000/', requestBody);
-        console.log(response);
-        expect(response.status).toBe(201);
-        expect(response.data.userName).toBe("Jest Testing");
-        expect(response.data.hasReturned).toBe(false); // default value
+    it('should get users', async () => {
+        const users = [{ id: '1', firstName: 'John', lastName: 'Doe', age: 30 }];
+        mock.method(LibrarySchema, 'find', async () => users);
+
+        const res = {
+            send: (data) => {
+                assert.deepEqual(data, users);
+            }
+        };
+
+        await getUsers({}, res);
     });
 
-    it("should delete a record", async () => {
-        const id = "65e4c03dc63add9ba0e00d7a";
-        const deleteResponse = await axios.delete(`http://localhost:3000/${id}`);
-        expect(deleteResponse.status).toBe(200);
-        expect(deleteResponse.data).toBe(`user with id ${id} deleted from the database`);
+    it('should get user by ID', async () => {
+        const userId = '1';
+        const user = { id: userId, firstName: 'John', lastName: 'Doe', age: 30 };
+        mock.method(LibrarySchema, 'findById', async () => user);
+
+        const req = { params: { id: userId } };
+        const res = {
+            send: (data) => {
+                assert.deepEqual(data, user);
+            }
+        };
+
+        await getUser(req, res);
     });
 
-    // it("should update a record", async () => {
-    //     const id = "65dfb12bb09f47a29a7d100f";
-    //     const updateResponse = await axios.patch(`http://localhost:3000/${id}`, {
-    //         userName: 'Updated from Jest',
-    //         bookTitle: 'Updated from Jest',
-    //         allottedDate: 'Updated from Jest',
-    //         hasReturned: true});
-    //     expect(updateResponse.status).toBe(200);
-    //     expect(updateResponse.data.userName).toBe("Updated from Jest");
-    // });
+    it('should delete user by ID', async () => {
+        const userId = '1';
+        const deletedUser = { id: userId, firstName: 'John', lastName: 'Doe', age: 30 };
+        mock.method(LibrarySchema, 'findByIdAndDelete', async () => deletedUser);
 
-    it("should return a record", async () => {
-        const getResponse = await axios.get(`http://localhost:3000/65e4b3c5ad6454f6fc3f3a8c`);
-        expect(getResponse.status).toBe(200);
-        expect(getResponse.data.userName).toBe("hasChangedNow");
+        const req = { params: { id: userId } };
+        const res = {
+            send: (message) => {
+                assert.equal(message, `user with id ${userId} deleted from the database`);
+            }
+        };
+
+        await deleteUser(req, res);
+    });
+
+    it('should update user by ID', async () => {
+        const userId = '1';
+        const updatedUser = { id: userId, firstName: 'Jane', lastName: 'Doe', age: 35 };
+        mock.method(LibrarySchema, 'findByIdAndUpdate', async () => updatedUser);
+
+        const req = { params: { id: userId }, body: { firstName: 'Jane', lastName: 'Doe', age: 35 } };
+        const res = {
+            json: (data) => {
+                assert.deepEqual(data, updatedUser);
+            }
+        };
+
+        await updateUser(req, res);
     });
 });

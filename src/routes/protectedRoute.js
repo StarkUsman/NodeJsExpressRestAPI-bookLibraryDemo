@@ -3,9 +3,6 @@ import express from 'express';
 const router = express.Router();
 import LibrarySchema from '../models/library.models.js';
 import verifyToken from '../middleware/authMiddleware.js';
-import jwt from 'jsonwebtoken';
-
-const secretKey = 'your-secret-key';
 // Protected route
 router.get('/', verifyToken, async (req, res) => {
     const userId = req.userId;
