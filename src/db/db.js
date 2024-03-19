@@ -15,4 +15,24 @@ const DBConnection = async () => {
   }
 };
 
-export { DBConnection };
+
+
+const connectWithRetry = () => {
+    console.log('Connecting to MongoDB...');
+    mongoose.connect('mongodb://localhost/librarybase', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(() => {
+        console.log('Connected to MongoDB');
+    })
+    .catch((err) => {
+        console.error('Failed to connect to MongoDB:', err.message);
+        console.log('Retrying connection in 5 seconds...');
+        setTimeout(connectWithRetry, 5000); // Retry after 5 seconds
+    });
+};
+
+connectWithRetry(); // Start initial connection attempt
+
+export { DBConnection, connectWithRetry };

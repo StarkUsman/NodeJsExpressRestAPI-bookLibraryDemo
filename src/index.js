@@ -1,10 +1,11 @@
 import express from 'express';
-import { DBConnection } from './db/db.js';
+import { DBConnection, connectWithRetry } from './db/db.js';
 import bodyParser from 'body-parser'; // for parsing incoming post request bodies
 import libraryRouter from './routes/library.router.js'; 
 
 
-DBConnection(); // connect to the database
+// DBConnection(); // connect to the database
+connectWithRetry(); // connect to the database
 
 const app = express();
 
